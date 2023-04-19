@@ -85,7 +85,7 @@ label_craft = tk.Label(email_generation_frame, text="Craft:")
 entry_craft = tk.Entry(email_generation_frame)
 label_name = tk.Label(email_generation_frame, text="Name:")
 entry_name = tk.Entry(email_generation_frame)
-label_image_numbers = tk.Label(email_generation_frame, text="Image Numbers (comma-separated):")
+label_image_numbers = tk.Label(email_generation_frame, text="Image Numbers:")
 entry_image_numbers = tk.Entry(email_generation_frame)
 
 # Create radio buttons for template selection (in email_generation_frame)
@@ -138,7 +138,7 @@ text_generated_email = tk.Text(email_generation_frame, height=20, width=80)
 # Create submit button (in email_generation_frame)
 button_submit = tk.Button(email_generation_frame, text="Generate Email", command=submit)
 text_generated_email.grid(row=7, column=0, columnspan=2, padx=10, pady=10)  # move to row 7
-button_submit.grid(row=8, column=0, padx=10, pady=10, sticky="w")  # move to row 8
+button_submit.grid(row=5, column=1, padx=10, pady=10, sticky="w")
 
 # (6) Add to layout in the template_editing_frame [NO CHANGES HERE]
 # Layout widgets in the email_generation_frame
@@ -171,6 +171,24 @@ text_template_2.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
 button_save_template_2.grid(row=3, column=0, padx=10, pady=10, sticky="w")
 text_template_3.grid(row=4, column=0, columnspan=2, padx=10, pady=10)
 button_save_template_3.grid(row=5, column=0, padx=10, pady=10, sticky="w")
+
+# Create submit button (in email_generation_frame)
+button_submit = tk.Button(email_generation_frame, text="Generate Email", command=submit)
+# Update the placement of the "Generate Email" button (based on your previous modification)
+button_submit.grid(row=8, column=0, columnspan=2, padx=10, pady=10)  # Set columnspan to 2 and remove sticky
+
+# [INSERT THE NEW CODE HERE]
+# Function to copy the generated email text to the clipboard
+def copy_to_clipboard():
+    # Retrieve the text from the text_generated_email widget
+    generated_email_text = text_generated_email.get(1.0, tk.END)
+    # Clear the clipboard and set the retrieved text to the clipboard
+    root.clipboard_clear()
+    root.clipboard_append(generated_email_text)
+
+# Create the "Copy" button and set its command to the copy_to_clipboard function
+button_copy = tk.Button(email_generation_frame, text="Copy", command=copy_to_clipboard)
+button_copy.place(x=350, y=265)  
 
 # Grid the notebook to the root window
 notebook.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
