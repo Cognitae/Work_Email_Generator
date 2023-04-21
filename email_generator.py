@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from typing import List
 
 # Define three email body templates (template_1, template_2, template_3)
@@ -9,7 +9,7 @@ Hi {name},
 
 I hope this email finds you well. My name is Adam Black, and I work as the Image Permissions Specialist for NCCER's Product Development department. As you may know, NCCER is a leading non-profit education foundation, offering over 70 craft areas in construction and maintenance curricula.
 
-We're currently updating our {craft} Curricula and would be thrilled to use {image_text}, as it has been well-received by our students. The Requested {imag_text} can be found {here_text}.
+We're currently updating our {craft} Curricula and would be thrilled to use {image_text}, as it has been well-received by our students. The Requested {imag_text} can be found {here_text} 
 
 In order to include {image_text} our updated materials, we'll need a signed permission and license form to provide our publisher. If you're interested in assisting us with this, I can send the form for your review and signature. Additionally, we'll need a high-resolution file of the image for both print and digital use. We will credit, "Courtesy of {company_name}" per your specification.
 
@@ -133,18 +133,24 @@ for i, (template_name, template_text) in enumerate(templates.items()):
     rb = tk.Radiobutton(email_generation_frame, text=template_name, variable=selected_template_var, value=template_name)
     rb.grid(row=i+6, column=0, padx=10, pady=10, sticky="w", columnspan=2)
 
-# (4) Define the submit function after creating the necessary tkinter widgets
+# Custom function to generate module sentence
+def generate_module_sentence(here_text, module):
+    if module:
+        return f"{here_text} to use in our module on {module}."
+    else:
+        return f"{here_text}."
+
 def submit():
     # Retrieve user inputs
     company_name = entry_company_name.get()
     craft = entry_craft.get()
     name = entry_name.get()
-    module = entry_module.get() 
+    module = entry_module.get().strip()
     num_images = int(entry_image_numbers.get().strip())
     image_numbers = list(range(1, num_images + 1))
     
     # Generate the subject line
-    subject_line = f"Subject: Permission to use {company_name} images for NCCER Curriculum"
+    subject_line = f"Subject: Permission to use {company_name} images for NCCER {craft} Curriculum"
     
     # Determine the text based on the number of images
     if len(image_numbers) == 1:
@@ -159,6 +165,9 @@ def submit():
             here_text = ", ".join(here_text_list[:-1]) + ", and " + here_text_list[-1]
         else:
             here_text = " and ".join(here_text_list)
+
+    # Generate module sentence based on whether module is provided
+    module_sentence = generate_module_sentence(here_text, module)
     
     # Retrieve the selected template and format it with actual values
     selected_template = templates[selected_template_var.get()]
@@ -168,7 +177,7 @@ def submit():
         craft=craft,
         image_text=image_text,
         imag_text=imag_text,
-        here_text=here_text,
+        here_text=module_sentence,  # Use the module_sentence here
         company_name=company_name
     )
     text_generated_email.delete(1.0, tk.END)
@@ -194,15 +203,21 @@ entry_name.grid(row=2, column=1, padx=10, pady=10, sticky="w")
 label_image_numbers.grid(row=3, column=0, padx=10, pady=10, sticky="w")
 entry_image_numbers.grid(row=3, column=1, padx=10, pady=10, sticky="w")
 
+def save_template(template_key, text_widget):
+    # Retrieve the updated content from the text widget
+    updated_template_content = text_widget.get(1.0, tk.END).strip()
+    # Update the corresponding template in the templates dictionary
+    templates[template_key] = updated_template_content
+    # Optionally, show a message to the user that the template has been successfully saved
+    tk.messagebox.showinfo("Success", f"{template_key} has been successfully saved!")
+
 # Create text widgets for editing templates and Save buttons (in template_editing_frame)
 text_template_1 = tk.Text(template_editing_frame, height=8, width=80)
 text_template_1.insert(tk.END, template_1)
 button_save_template_1 = tk.Button(template_editing_frame, text="Save Template 1", command=lambda: save_template("Template 1", text_template_1))
-
 text_template_2 = tk.Text(template_editing_frame, height=8, width=80)
 text_template_2.insert(tk.END, template_2)
 button_save_template_2 = tk.Button(template_editing_frame, text="Save Template 2", command=lambda: save_template("Template 2", text_template_2))
-
 text_template_3 = tk.Text(template_editing_frame, height=8, width=80)
 text_template_3.insert(tk.END, template_3)
 button_save_template_3 = tk.Button(template_editing_frame, text="Save Template 3", command=lambda: save_template("Template 3", text_template_3))
