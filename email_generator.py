@@ -9,9 +9,9 @@ Hi {name},
 
 I hope this email finds you well. My name is Adam Black, and I work as the Image Permissions Specialist for NCCER's Product Development department. As you may know, NCCER is a leading non-profit education foundation, offering over 70 craft areas in construction and maintenance curricula.
 
-We're currently updating our {craft} Curricula and would be thrilled to use {image_text}, as it has been well-received by our students. The Requested images can be found {here_text}.
+We're currently updating our {craft} Curricula and would be thrilled to use {image_text}, as it has been well-received by our students. The Requested {imag_text} can be found {here_text}.
 
-In order to include this image in our updated materials, we'll need a signed permission and license form to provide our publisher. If you're interested in assisting us with this, I can send the form for your review and signature. Additionally, we'll need a high-resolution file of the image for both print and digital use. We will credit, "Courtesy of {company_name}" per your specification.
+In order to include {image_text} our updated materials, we'll need a signed permission and license form to provide our publisher. If you're interested in assisting us with this, I can send the form for your review and signature. Additionally, we'll need a high-resolution file of the image for both print and digital use. We will credit, "Courtesy of {company_name}" per your specification.
 
 Please feel free to reach out if you have any questions, need further clarification, or would like to discuss this opportunity further.
 
@@ -26,9 +26,9 @@ Dear {name},
 
 I'm reaching out on behalf of NCCER's Product Development department. My name is Adam Black, and I serve as the Image Permissions Specialist. NCCER, a leading non-profit education foundation, is in the process of updating its curricula for over 70 craft areas in construction and maintenance.
 
-As part of this effort, we're updating our {craft} Curricula and are excited about the possibility of including {image_text}. The images we're interested in can be found {here_text}.
+As part of this effort, we're updating our {craft} Curricula and are excited about the possibility of including {image_text}. The {imag_text} we're interested in can be found {here_text}.
 
-To proceed, we require a signed permission and license form for our publisher, as well as high-resolution image files for print and digital use. We're happy to credit the images as "Courtesy of {company_name}" as specified by you.
+To proceed, we require a signed permission and license form for our publisher, as well as high-resolution image files for print and digital use. We're happy to credit the {imag_text} as "Courtesy of {company_name}" as specified by you.
 
 Please let me know if you have any questions or if you'd like to discuss this further.
 
@@ -44,7 +44,7 @@ My name is Adam Black, and I work with NCCER's Product Development team as the I
 
 We're currently working on the {craft} Curricula and are very interested in using {image_text} in our materials. You can view the images in question {here_text}.
 
-To include these images, we'll need a completed permission and license form, as well as high-resolution image files suitable for print and digital formats. Image credit will be given as "Courtesy of {company_name}" according to your preferences.
+To include these {imag_text}, we'll need a completed permission and license form, as well as high-resolution image files suitable for print and digital formats. Image credit will be given as "Courtesy of {company_name}" according to your preferences.
 
 If you have any questions or would like more information, please don't hesitate to reach out.
 
@@ -110,8 +110,10 @@ def submit():
     if len(image_numbers) == 1:
         image_text = "this image"
         here_text = "Here"
+        imag_text = "image"
     else:
         image_text = "these images"
+        imag_text = "images"
         here_text_list = ["Here"] * len(image_numbers)
         if len(here_text_list) > 2:
             here_text = ", ".join(here_text_list[:-1]) + ", and " + here_text_list[-1]
@@ -125,6 +127,7 @@ def submit():
         name=name,
         craft=craft,
         image_text=image_text,
+        imag_text=imag_text,
         here_text=here_text,
         company_name=company_name
     )
@@ -172,10 +175,6 @@ button_save_template_2.grid(row=3, column=0, padx=10, pady=10, sticky="w")
 text_template_3.grid(row=4, column=0, columnspan=2, padx=10, pady=10)
 button_save_template_3.grid(row=5, column=0, padx=10, pady=10, sticky="w")
 
-# Create submit button (in email_generation_frame)
-button_submit = tk.Button(email_generation_frame, text="Generate Email", command=submit)
-# Update the placement of the "Generate Email" button (based on your previous modification)
-button_submit.grid(row=8, column=0, columnspan=2, padx=10, pady=10)  # Set columnspan to 2 and remove sticky
 
 # [INSERT THE NEW CODE HERE]
 # Function to copy the generated email text to the clipboard
