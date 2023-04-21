@@ -59,9 +59,15 @@ templates = {
     "Template 3": template_3
 }
 
-# Function to save the edited templates [MODIFY FUNCTION]
-def save_template(template_key, text_widget):
-    templates[template_key] = text_widget.get(1.0, tk.END)
+import tkinter as tk
+from tkinter import ttk
+from typing import List
+
+# [TEMPLATE DEFINITIONS AND CODE]
+
+# Function to convert inches to pixels (assuming standard DPI of 96)
+def inches_to_pixels(inches, dpi=96):
+    return int(inches * dpi)
 
 root = tk.Tk()
 root.title("Email Generator")
@@ -77,29 +83,63 @@ template_editing_frame = ttk.Frame(notebook)
 notebook.add(email_generation_frame, text="Email Generation")
 notebook.add(template_editing_frame, text="Edit Templates")
 
-# (3) Create labels, entries, radio buttons, text widgets, and buttons for the email_generation_frame [NO CHANGES HERE]
-# Create labels and entries for input fields (in email_generation_frame)
+# Load logo image (after defining email_generation_frame)
+logo_image = tk.PhotoImage(file="resources/cognitae.png")
+# Resize the logo to 1.5 inches x 1.5 inches
+logo_size_in_inches = 1.5
+logo_size_in_pixels = inches_to_pixels(logo_size_in_inches)
+logo_image = logo_image.subsample(logo_image.width() // logo_size_in_pixels)
+
+label_logo = tk.Label(email_generation_frame, image=logo_image)
+label_logo.place(x=500, y=0)
+
+# Create label and entry for "Company Name" (after defining email_generation_frame)
 label_company_name = tk.Label(email_generation_frame, text="Company Name:")
 entry_company_name = tk.Entry(email_generation_frame)
+
+
+# Create label and entry for "Craft"
 label_craft = tk.Label(email_generation_frame, text="Craft:")
 entry_craft = tk.Entry(email_generation_frame)
+
+# Create label and entry for "Name"
 label_name = tk.Label(email_generation_frame, text="Name:")
 entry_name = tk.Entry(email_generation_frame)
+
+# Create label and entry for "Image Numbers"
 label_image_numbers = tk.Label(email_generation_frame, text="Image Numbers:")
 entry_image_numbers = tk.Entry(email_generation_frame)
 
-# Create radio buttons for template selection (in email_generation_frame)
+# Create label and entry for "Module" parameter
+label_module = tk.Label(email_generation_frame, text="Module:")
+entry_module = tk.Entry(email_generation_frame)
+
+# Adjust grid layout to accommodate labels and entries, and logo
+label_company_name.grid(row=0, column=0, padx=10, pady=10, sticky="e")
+entry_company_name.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+label_craft.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+entry_craft.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+label_name.grid(row=2, column=0, padx=10, pady=10, sticky="e")
+entry_name.grid(row=2, column=1, padx=10, pady=10, sticky="w")
+label_image_numbers.grid(row=3, column=0, padx=10, pady=10, sticky="e")
+entry_image_numbers.grid(row=3, column=1, padx=10, pady=10, sticky="w")
+label_module.grid(row=4, column=0, padx=10, pady=10, sticky="w")
+entry_module.grid(row=4, column=1, padx=10, pady=10, sticky="w")
+# Define the selected_template_var variable for radiobuttons
 selected_template_var = tk.StringVar(value="Template 1")
+
+# Create radiobuttons for selecting templates
 for i, (template_name, template_text) in enumerate(templates.items()):
     rb = tk.Radiobutton(email_generation_frame, text=template_name, variable=selected_template_var, value=template_name)
-    rb.grid(row=i+4, column=0, padx=10, pady=10, sticky="w", columnspan=2)  # span across two columns
-    
+    rb.grid(row=i+6, column=0, padx=10, pady=10, sticky="w", columnspan=2)
+
 # (4) Define the submit function after creating the necessary tkinter widgets
 def submit():
     # Retrieve user inputs
     company_name = entry_company_name.get()
     craft = entry_craft.get()
     name = entry_name.get()
+    module = entry_module.get() 
     num_images = int(entry_image_numbers.get().strip())
     image_numbers = list(range(1, num_images + 1))
     
@@ -140,8 +180,8 @@ text_generated_email = tk.Text(email_generation_frame, height=20, width=80)
 
 # Create submit button (in email_generation_frame)
 button_submit = tk.Button(email_generation_frame, text="Generate Email", command=submit)
-text_generated_email.grid(row=7, column=0, columnspan=2, padx=10, pady=10)  # move to row 7
-button_submit.grid(row=5, column=1, padx=10, pady=10, sticky="w")
+text_generated_email.grid(row=10, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
+button_submit.grid(row=9, column=0, padx=10, pady=10, sticky="w")
 
 # (6) Add to layout in the template_editing_frame [NO CHANGES HERE]
 # Layout widgets in the email_generation_frame
@@ -187,7 +227,7 @@ def copy_to_clipboard():
 
 # Create the "Copy" button and set its command to the copy_to_clipboard function
 button_copy = tk.Button(email_generation_frame, text="Copy", command=copy_to_clipboard)
-button_copy.place(x=350, y=265)  
+button_copy.grid(row=9, column=1, padx=10, pady=10, sticky="w")
 
 # Grid the notebook to the root window
 notebook.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
