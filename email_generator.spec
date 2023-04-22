@@ -8,7 +8,7 @@ a = Analysis(
     ['email_generator.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('resources/cognitae.png', 'resources'), ('resources/email_logo.ico', 'resources')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -41,5 +41,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['C:\\Users\\adamr\\Desktop\\email_logo.ico'],
+    icon=['resources\\email_logo.ico'],
 )

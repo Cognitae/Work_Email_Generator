@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from typing import List
+import sys  # Import the sys module
+import os   # Import the os module
+import json
 
 # Define three email body templates (template_1, template_2, template_3)
 template_1 = """{subject_line}
@@ -82,9 +85,17 @@ template_editing_frame = ttk.Frame(notebook)
 # Add frames as tabs to the notebook
 notebook.add(email_generation_frame, text="Email Generation")
 notebook.add(template_editing_frame, text="Edit Templates")
+# Determine the correct path for the resource file
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 # Load logo image (after defining email_generation_frame)
-logo_image = tk.PhotoImage(file="resources/cognitae.png")
+logo_image_path = resource_path("resources/cognitae.png")  # Use the resource_path function
+logo_image = tk.PhotoImage(file=logo_image_path)
 # Resize the logo to 1.5 inches x 1.5 inches
 logo_size_in_inches = 1.5
 logo_size_in_pixels = inches_to_pixels(logo_size_in_inches)
@@ -203,13 +214,37 @@ entry_name.grid(row=2, column=1, padx=10, pady=10, sticky="w")
 label_image_numbers.grid(row=3, column=0, padx=10, pady=10, sticky="w")
 entry_image_numbers.grid(row=3, column=1, padx=10, pady=10, sticky="w")
 
-def save_template(template_key, text_widget):
-    # Retrieve the updated content from the text widget
-    updated_template_content = text_widget.get(1.0, tk.END).strip()
-    # Update the corresponding template in the templates dictionary
-    templates[template_key] = updated_template_content
-    # Optionally, show a message to the user that the template has been successfully saved
-    tk.messagebox.showinfo("Success", f"{template_key} has been successfully saved!")
+# File to store templates
+TEMPLATES_FILE = "templates.json"
+
+# Function to save templates to a file
+def save_templates_to_file(templates):
+    with open(TEMPLATES_FILE, 'w') as f:
+        json.dump(templates, f)
+
+# Function to load templates from a file
+def load_templates_from_file():
+    try:
+        with open(TEMPLATES_FILE, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        # If the file does not exist, return the default templates
+        return {
+            "Template 1": template_1,
+            "Template 2": template_2,
+            "Template 3": template_3
+        }
+
+# Modify the save_template function
+def save_template(template_name, text_widget):
+    # Update the template in the templates dictionary
+    templates[template_name] = text_widget.get(1.0, tk.END)
+    # Save the updated templates to the file
+    save_templates_to_file(templates)
+
+# Load the templates from the file when the program starts
+templates = load_templates_from_file()
+
 
 # Create text widgets for editing templates and Save buttons (in template_editing_frame)
 text_template_1 = tk.Text(template_editing_frame, height=8, width=80)
