@@ -267,6 +267,18 @@ button_save_template_3.grid(row=5, column=0, padx=10, pady=10, sticky="w")
 
 
 # [INSERT THE NEW CODE HERE]
+def on_closing():
+    if messagebox.askokcancel("Save changes", "Do you want to save changes to templates before closing?"):
+        save_templates_to_file(templates)
+    root.destroy()
+
+# Modify the save_template function
+def save_template(template_name, text_widget):
+    # Update the template in the templates dictionary
+    templates[template_name] = text_widget.get(1.0, tk.END)
+    # Save the updated templates to the file
+    save_templates_to_file(templates)
+    messagebox.showinfo("Template Saved", f"{template_name} has been saved successfully.")
 # Function to copy the generated email text to the clipboard
 def copy_to_clipboard():
     # Retrieve the text from the text_generated_email widget
@@ -282,4 +294,5 @@ button_copy.grid(row=9, column=1, padx=10, pady=10, sticky="w")
 # Grid the notebook to the root window
 notebook.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 #Start the tkinter event loop
+root.protocol("WM_DELETE_WINDOW", on_closing)
 root.mainloop()
